@@ -42,8 +42,11 @@
                 .then(function (response) {
                   if (response.headers('Content-Type').indexOf("base64") !== -1){
                     var string = new TextDecoder().decode(response.data);
-                    $scope.objectURL = "data:"+response.headers('Content-Type')+','+string
-                    return;
+                    if (/^data\:/.test(string)){
+                      $scope.objectURL = string;
+                    }else{
+                      $scope.objectURL = "data:"+response.headers('Content-Type')+','+string;
+                    }
                   }
                   var blob = new Blob(
                     [response.data], { type: response.headers('Content-Type') }
